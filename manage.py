@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-import json
 import os
 import sys
 import time
@@ -7,12 +5,12 @@ import subprocess
 import signal
 
 def run_ngrok():
-    proc = subprocess.Popen(['ngrok http 8000 > ngrok.log 2>&1'], shell=True)
+    proc = subprocess.Popen(['ngrok http 8000 > /var/log/ngrok.log 2>&1'], shell=True)
     time.sleep(10)
     return (proc)
 
 def get_ngrok_url():
-    os.system("curl  http://localhost:4040/api/tunnels > tunnels.json")
+    os.system("curl  http://localhost:4040/api/tunnels > /var/log/tunnels.json")
     url = ""
     with open('tunnels.json') as data_file:    
         datajson = json.load(data_file)
