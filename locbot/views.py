@@ -28,7 +28,7 @@ def handle_location_message(event):
     lock.acquire()
     mapkey = None
     try:
-        logging.debug(str(threading.currentThread().ident) + "|handle_location_message >>>")
+        logging.debug(str(os.getpid()) + "|handle_location_message >>>")
         logging.info("current map lenght:"+str(len(usermap)))
         logging.info(usermap)
         if event.source.user_id in usermap:
@@ -69,7 +69,7 @@ def handle_text_message(event):
     global usermap
     lock.acquire()
     try:
-        logging.debug(str(threading.currentThread().ident) + "|handle_text_message >>>")
+        logging.debug(str(os.getpid()) + "|handle_text_message >>>")
         text = event.message.text
         if text[0] == u'找':
             key = text[1:]
@@ -130,7 +130,7 @@ def callback(request):
     if request.method == 'POST':
         signature = request.META['HTTP_X_LINE_SIGNATURE']
         body = request.body.decode('utf-8')
-        print(str(count)+"|callback|"+str(usermap))
+        print(str(os.getpid())+"|callback|"+str(usermap))
         count += 1
         try:
             handler.handle(body, signature)
