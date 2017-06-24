@@ -16,14 +16,16 @@ from linebot.models import (
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
 usermap = {}
+logging.basicConfig(level=logging.DEBUG)
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
     try:
+        logging.debug("handle_location_message >>>")
         gmap = locbot.gmap.Gmap()
         if event.source.user_id in usermap:
             keyword = usermap[event.source.user_id]
-            logging.info("find locations " + keyword)
+            logging.info(event.source.user_id + " - find loc:" + keyword)
             usermap.pop(event.source.user_id, None)
             ret = gmap.place_nearby((event.message.latitude, event.message.longitude), keyword)
             msgs = []
@@ -50,37 +52,39 @@ def handle_location_message(event):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     try:
+        logging.debug("handle_text_message >>>")
         text = event.message.text
         if text[0] == u'找':
             usermap[event.source.user_id] = text[1:]
             msg = u'你要找\u300e' + text[1:] + '\u300f,請輸入您的位置' + '\u2198'
+            logging.info(event.source.user_id + msg)
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text=msg)
             )
     except LineBotApiError as e:
-        print(e)
+        logging.warning(e)
 
 @handler.add(MessageEvent, message=VideoMessage)
 def handle_video_message(event):
     try:
         print(event)
     except LineBotApiError as e:
-        print(e)
+        logging.warning(e)
 
 @handler.add(MessageEvent, message=AudioMessage)
 def handle_audio_message(event):
     try:
         print(event)
     except LineBotApiError as e:
-        print(e)
+        logging.warning(e)
 
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_sticker_message(event):
     try:
         print(event)
     except LineBotApiError as e:
-        print(e)
+        logging.warning(e)
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
@@ -91,7 +95,7 @@ def handle_image_message(event):
         #    TextSendMessage(text="Image")
         #)
     except LineBotApiError as e:
-        print(e)
+        logging.warning(e)
 
 @handler.default()
 def default(event):
