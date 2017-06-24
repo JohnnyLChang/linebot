@@ -26,6 +26,8 @@ def handle_location_message(event):
     lock.acquire()
     try:
         logging.debug(str(threading.currentThread().ident) + "|handle_location_message >>>")
+        logging.info("current map lenght:"+len(usermap))
+        logging.info(usermap)
         if event.source.user_id in usermap:
             keyword = usermap[event.source.user_id]
             logging.info(event.source.user_id + "=> find loc:" + keyword)
