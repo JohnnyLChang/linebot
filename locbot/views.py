@@ -5,6 +5,7 @@
 import logging
 import locbot.gmap
 import threading 
+import os
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
