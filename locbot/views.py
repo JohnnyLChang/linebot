@@ -25,6 +25,7 @@ lock = threading.RLock()
 def handle_location_message(event):
     global usermap
     lock.acquire()
+    mapkey = None
     try:
         logging.debug(str(threading.currentThread().ident) + "|handle_location_message >>>")
         logging.info("current map lenght:"+str(len(usermap)))
