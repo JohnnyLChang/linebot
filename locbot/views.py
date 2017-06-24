@@ -68,8 +68,10 @@ def handle_text_message(event):
         logging.debug(str(threading.currentThread().ident) + "|handle_text_message >>>")
         text = event.message.text
         if text[0] == u'找':
-            usermap[event.source.user_id] = text[1:]
-            msg = u'你要找\u300e' + text[1:] + '\u300f,請輸入您的位置' + '\u2198'
+            key = text[1:]
+            usermap[event.source.user_id] = key
+            logging.info(usermap)
+            msg = u'你要找\u300e' + key + '\u300f,請輸入您的位置' + '\u2198'
             logging.info(event.source.user_id + "=>" + msg)
             line_bot_api.reply_message(
                 event.reply_token,
