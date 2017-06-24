@@ -124,7 +124,7 @@ def callback(request):
     if request.method == 'POST':
         signature = request.META['HTTP_X_LINE_SIGNATURE']
         body = request.body.decode('utf-8')
-
+        print("callback"+usermap)
         try:
             handler.handle(body, signature)
         except InvalidSignatureError:
