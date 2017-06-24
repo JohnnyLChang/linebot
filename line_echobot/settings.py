@@ -24,16 +24,11 @@ SECRET_KEY = get_env_variable('SECRET_KEY')
 LINE_CHANNEL_ACCESS_TOKEN = get_env_variable('LINE_CHANNEL_ACCESS_TOKEN')
 LINE_CHANNEL_SECRET = get_env_variable('LINE_CHANNEL_SECRET')
 GOOGLE_API_KEY = get_env_variable('GOOGLE_API_KEY')
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = '89mit^_am5^0v(__ukh1@aafq(nh0xacn(=leo$h(0_$&r6p16'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '.ngrok.io']
