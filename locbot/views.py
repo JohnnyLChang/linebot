@@ -6,6 +6,7 @@ import logging
 import locbot.gmap
 import threading 
 import os
+from django.core.cache import cache
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
@@ -17,28 +18,19 @@ from linebot.models import (
 
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
-usermap = {}
 gmap = locbot.gmap.Gmap()
 logging.basicConfig(level=logging.DEBUG)
-lock = threading.RLock()
-count = 0
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
-    global usermap
-    lock.acquire()
     mapkey = None
     try:
-        logging.debug(str(os.getpid()) + "|handle_location_message >>>")
-        logging.info("current map lenght:"+str(len(usermap)))
-        logging.info(usermap)
-        if event.source.user_id in usermap:
-            mapkey = usermap[event.source.user_id]
+        logging.debug(str(os.getpid()) + "|handle_location_message|>>>")
+        mapkey = cache.get(event.source.user_id)
         
         if mapkey:
-            mapkey = usermap[event.source.user_id]
-            logging.info(event.source.user_id + "=> find loc:" + mapkey)
-            usermap[event.source.user_id] = ""
+            logging.info(event.source.user_id + "|find|" + mapkey)
+            cache.set(event.source.user_id, "")
             ret = gmap.place_nearby((event.message.latitude, event.message.longitude), mapkey)
             msgs = []
             for obj in ret:
@@ -62,20 +54,15 @@ def handle_location_message(event):
             logging.warning(event.source.user_id + "=> not found")
     except LineBotApiError as e:
         print(e)
-    finally:
-        lock.release()
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
-    global usermap
-    lock.acquire()
     try:
-        logging.debug(str(os.getpid()) + "|handle_text_message >>>")
+        logging.debug(str(os.getpid()) + "|handle_text_message|>>>")
         text = event.message.text
         if text[0] == u'找':
             key = text[1:]
-            usermap[event.source.user_id] = key
-            logging.info(usermap)
+            cache.set(event.source.user_id, key)
             msg = u'你要找\u300e' + key + '\u300f,請輸入您的位置' + '\u2198'
             logging.info(event.source.user_id + "=>" + msg)
             line_bot_api.reply_message(
@@ -84,8 +71,6 @@ def handle_text_message(event):
             )
     except LineBotApiError as e:
         logging.warning(e)
-    finally:
-        lock.release()
 
 @handler.add(MessageEvent, message=VideoMessage)
 def handle_video_message(event):
@@ -131,8 +116,9 @@ def callback(request):
     if request.method == 'POST':
         signature = request.META['HTTP_X_LINE_SIGNATURE']
         body = request.body.decode('utf-8')
-        print(str(os.getpid())+"|callback|"+str(usermap))
-        count += 1
+        print(signature)
+        print(body)
+        print(str(os.getpid())+"|callback")
         try:
             handler.handle(body, signature)
         except InvalidSignatureError:
