@@ -34,7 +34,7 @@ def handle_location_message(event):
         if key:
             keyword = usermap[event.source.user_id]
             logging.info(event.source.user_id + "=> find loc:" + keyword)
-            usermap["event.source.user_id"] = ""
+            usermap[event.source.user_id] = ""
             ret = gmap.place_nearby((event.message.latitude, event.message.longitude), keyword)
             msgs = []
             for obj in ret:
