@@ -21,15 +21,15 @@ def get_ngrok_url():
     return (url)
 
 def signal_handler(signal, frame):
-    pngrok.terminate()
+    #pngrok.terminate()
     print('Terminate process')
     sys.exit(0)
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "line_echobot.settings")
-    pngrok = run_ngrok()
-    print(get_ngrok_url())
+    #pngrok = run_ngrok()
+    #print(get_ngrok_url())
 
     from django.core.management import execute_from_command_line
 
