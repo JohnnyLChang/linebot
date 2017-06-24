@@ -37,7 +37,7 @@ sys.path.insert(0, root)
 os.environ['SECRET_KEY'] = '89mit^_am5^0v(__ukh1@aafq(nh0xacn(=leo$h(0_$&r6p16))))'
 os.environ['LINE_CHANNEL_ACCESS_TOKEN'] = 'PxbSfhsHqORsh9Xv8qdL12it0pFtJLEDWkd1qQ7zQ5/wqZ7gP2SBlwt7U/N7w4qe+Me7Lh5VQIMQVhfOOv+FkbkdUjeZSpB0KA1x5YogamreysXADhhj+o7qYCEUpOCuBUrC69hz1SIGt5Me7LGqIwdB04t89/1O/w1cDnyilFU='
 os.environ['LINE_CHANNEL_SECRET'] = '433bccd149d8e4f4c2e48bd3914eadf8'
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "linebot.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mainlinebot.settings")
 
 pngrok = run_ngrok()
 print(get_ngrok_url())

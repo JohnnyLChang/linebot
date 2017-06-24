@@ -27,7 +27,7 @@ def signal_handler(signal, frame):
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "linebot.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mainlinebot.settings")
     pngrok = run_ngrok()
     print(get_ngrok_url())
 
