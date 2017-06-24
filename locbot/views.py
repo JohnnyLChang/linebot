@@ -16,16 +16,16 @@ from linebot.models import (
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
 usermap = {}
+gmap = locbot.gmap.Gmap()
 logging.basicConfig(level=logging.DEBUG)
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
     try:
         logging.debug("handle_location_message >>>")
-        gmap = locbot.gmap.Gmap()
         if event.source.user_id in usermap:
             keyword = usermap[event.source.user_id]
-            logging.info(event.source.user_id + " - find loc:" + keyword)
+            logging.info(event.source.user_id + "=> find loc:" + keyword)
             usermap.pop(event.source.user_id, None)
             ret = gmap.place_nearby((event.message.latitude, event.message.longitude), keyword)
             msgs = []
@@ -46,6 +46,8 @@ def handle_location_message(event):
                     event.reply_token,
                     messages=msgs
                 )
+        else:
+            logging.warning(event.source.user_id + "=> not found")
     except LineBotApiError as e:
         print(e)
 
@@ -57,7 +59,7 @@ def handle_text_message(event):
         if text[0] == u'找':
             usermap[event.source.user_id] = text[1:]
             msg = u'你要找\u300e' + text[1:] + '\u300f,請輸入您的位置' + '\u2198'
-            logging.info(event.source.user_id + msg)
+            logging.info(event.source.user_id + "=>" + msg)
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text=msg)
