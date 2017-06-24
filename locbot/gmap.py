@@ -2,7 +2,7 @@ import googlemaps
 import json
 from django.conf import settings
 from datetime import datetime
-from nested_dict import nested_dict
+
 class Gmap:
     api_key = settings.GOOGLE_API_KEY
     max_items = 5
