@@ -1,4 +1,4 @@
-# echobot/urls.py
+# locbot/urls.py
 
 
 from django.conf.urls import url

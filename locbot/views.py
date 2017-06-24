@@ -1,9 +1,9 @@
-# line_echobot/echobot/views.py
+# linebot/locbot/views.py
 
 # WebhookHandler version
 
 import logging
-import echobot.gmap
+import locbot.gmap
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
@@ -20,7 +20,7 @@ usermap = {}
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
     try:
-        gmap = echobot.gmap.Gmap()
+        gmap = locbot.gmap.Gmap()
         if event.source.user_id in usermap:
             keyword = usermap[event.source.user_id]
             logging.info("find locations " + keyword)
