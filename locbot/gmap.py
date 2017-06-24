@@ -19,15 +19,17 @@ class Gmap:
             try:
                 if count == self.max_items:
                     break
-                if obj['opening_hours']['open_now']:
-                    p = {}
-                    p['name'] = obj['name']
-                    p['lat'] = obj['geometry']['location']['lat']
-                    p['lng'] = obj['geometry']['location']['lng']
-                    l = (obj['geometry']['location']['lat'],obj['geometry']['location']['lng'])
-                    addrs = self.gmaps.reverse_geocode(l, language='zh-TW')
-                    p['addr'] = addrs[0]['formatted_address']
-                    places.append(p)
+
+                p = {}
+                p['name'] = obj['name']
+                p['lat'] = obj['geometry']['location']['lat']
+                p['lng'] = obj['geometry']['location']['lng']
+                l = (obj['geometry']['location']['lat'],obj['geometry']['location']['lng'])
+                addrs = self.gmaps.reverse_geocode(l, language='zh-TW')
+                p['addr'] = addrs[0]['formatted_address']
+                if obj['opening_hours']['open_now'] == True:
+                    p['name'] += "(營業中)"
+                places.append(p)
                 count = count + 1
             except Exception as e:
                 print(e)
