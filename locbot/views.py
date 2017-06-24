@@ -23,6 +23,7 @@ lock = threading.RLock()
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
+    global usermap
     lock.acquire()
     try:
         logging.debug(str(threading.currentThread().ident) + "|handle_location_message >>>")
@@ -63,6 +64,7 @@ def handle_location_message(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
+    global usermap
     lock.acquire()
     try:
         logging.debug(str(threading.currentThread().ident) + "|handle_text_message >>>")
@@ -121,6 +123,7 @@ def default(event):
 
 @csrf_exempt
 def callback(request):
+    global usermap
     if request.method == 'POST':
         signature = request.META['HTTP_X_LINE_SIGNATURE']
         body = request.body.decode('utf-8')
