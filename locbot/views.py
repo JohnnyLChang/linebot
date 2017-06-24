@@ -20,6 +20,7 @@ usermap = {}
 gmap = locbot.gmap.Gmap()
 logging.basicConfig(level=logging.DEBUG)
 lock = threading.RLock()
+count = 0
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
@@ -49,7 +50,7 @@ def handle_location_message(event):
             if not msgs:
                 line_bot_api.reply_message(
                     event.reply_token,
-                    TextSendMessage(text='找不到'+keyword)
+                    TextSendMessage(text='找不到'+mapkey)
                 )
             else:
                 line_bot_api.reply_message(
@@ -125,10 +126,12 @@ def default(event):
 @csrf_exempt
 def callback(request):
     global usermap
+    global count
     if request.method == 'POST':
         signature = request.META['HTTP_X_LINE_SIGNATURE']
         body = request.body.decode('utf-8')
-        print("callback"+str(usermap))
+        print(str(count)+"|callback|"+str(usermap))
+        count += 1
         try:
             handler.handle(body, signature)
         except InvalidSignatureError:
