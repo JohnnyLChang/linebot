@@ -25,7 +25,7 @@ lock = threading.RLock()
 def handle_location_message(event):
     lock.acquire()
     try:
-        logging.debug(threading.currentThread().ident + "|handle_location_message >>>")
+        logging.debug(str(threading.currentThread().ident) + "|handle_location_message >>>")
         if event.source.user_id in usermap:
             keyword = usermap[event.source.user_id]
             logging.info(event.source.user_id + "=> find loc:" + keyword)
@@ -60,7 +60,7 @@ def handle_location_message(event):
 def handle_text_message(event):
     lock.acquire()
     try:
-        logging.debug(threading.currentThread().ident + "|handle_text_message >>>")
+        logging.debug(str(threading.currentThread().ident) + "|handle_text_message >>>")
         text = event.message.text
         if text[0] == u'找':
             usermap[event.source.user_id] = text[1:]
