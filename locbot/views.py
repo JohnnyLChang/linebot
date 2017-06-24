@@ -4,7 +4,7 @@
 
 import logging
 import locbot.gmap
-from threading import Rlock
+import threading 
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
@@ -19,7 +19,7 @@ handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
 usermap = {}
 gmap = locbot.gmap.Gmap()
 logging.basicConfig(level=logging.DEBUG)
-lock = Rlock()
+lock = threading.RLock()
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
