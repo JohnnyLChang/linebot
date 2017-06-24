@@ -195,3 +195,4 @@ ENV/
 
 # mypy
 .mypy_cache/
+/.project
