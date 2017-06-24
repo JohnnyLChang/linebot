@@ -28,10 +28,10 @@ def handle_location_message(event):
         logging.debug(str(threading.currentThread().ident) + "|handle_location_message >>>")
         logging.info("current map lenght:"+str(len(usermap)))
         logging.info(usermap)
-        if event.source.user_id in usermap:
+        if event.source.user_id in usermap and usermap["event.source.user_id"]:
             keyword = usermap[event.source.user_id]
             logging.info(event.source.user_id + "=> find loc:" + keyword)
-            usermap.pop(event.source.user_id, None)
+            usermap["event.source.user_id"] = ""
             ret = gmap.place_nearby((event.message.latitude, event.message.longitude), keyword)
             msgs = []
             for obj in ret:
