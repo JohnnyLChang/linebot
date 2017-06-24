@@ -4,6 +4,7 @@
 
 import logging
 import locbot.gmap
+from threading import Rlock
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
@@ -18,9 +19,11 @@ handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
 usermap = {}
 gmap = locbot.gmap.Gmap()
 logging.basicConfig(level=logging.DEBUG)
+lock = Rlock()
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
+    lock.acquire()
     try:
         logging.debug("handle_location_message >>>")
         if event.source.user_id in usermap:
@@ -50,9 +53,12 @@ def handle_location_message(event):
             logging.warning(event.source.user_id + "=> not found")
     except LineBotApiError as e:
         print(e)
+    finally:
+        lock.release()
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
+    lock.acquire()
     try:
         logging.debug("handle_text_message >>>")
         text = event.message.text
@@ -66,6 +72,8 @@ def handle_text_message(event):
             )
     except LineBotApiError as e:
         logging.warning(e)
+    finally:
+        lock.release()
 
 @handler.add(MessageEvent, message=VideoMessage)
 def handle_video_message(event):
